@@ -2,7 +2,9 @@
 <html>
 	<head>
         <meta charset="utf-8" />
-        
+		<meta name="theme-color" content="#00008B">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#00008B">
+		<meta name="msapplication-navbutton-color" content="#00008B">
         <link rel="shortcut icon" href="/storage/images/favicon.png"/>
         <title>Colégio Liceu Unid. II</title>
         

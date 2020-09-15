@@ -16,7 +16,19 @@
                 <a class="nav-link" href="/admin/users">Usuários</a>
             </li>
             <li @if($current=="principal") class="nav-item active" @else class="nav-item" @endif>
-                <a class="nav-link" href="/admin/principal">Página Principal</a>
+                <a class="nav-link" href="/admin/principal">Layout Inicial</a>
+            </li>
+            <li @if($current=="cadastros") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/admin/cadastros">Cadastros</a>
+            </li>
+            <li @if($current=="pedidos") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/admin/pedidos">Pedidos</a>
+            </li>
+            <li @if($current=="estoque") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/admin/estoque">Estoque</a>
+            </li>
+            <li @if($current=="relatorios") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/admin/relatorios">Relatórios</a>
             </li>
             @endauth
 

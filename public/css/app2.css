@@ -1,0 +1,141 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700");
+/* Icon */
+
+	.icon {
+		text-decoration: none;
+		border-bottom: none;
+		position: relative;
+	}
+
+		.icon:before {
+			-moz-osx-font-smoothing: grayscale;
+			-webkit-font-smoothing: antialiased;
+			font-family: FontAwesome;
+			font-style: normal;
+			font-weight: normal;
+			text-transform: none !important;
+		}
+
+		.icon > .label {
+			display: none;
+		}
+
+/*Style Pessoal*/
+
+		html, body {
+			background-color: white;
+			color: #636b6f;
+		}
+
+		.container {
+			padding:50px;
+			width: 100%;
+    		text-align: center;
+		}
+
+
+		.links > a {
+			color: #636b6f;
+			padding: 5px 15px;
+			font-size: 20px;
+			font-weight: 600;
+			letter-spacing: .1rem;
+			text-decoration: none;
+			text-transform: uppercase;
+			float: left;
+		}
+
+		.links > a:hover {
+			border: 2px solid #FFFF00;
+  			color: #0000CD;
+		}
+
+		.links2 > a {
+			color: #636b6f;
+			padding: 5px 30px;
+			font-size: 15px;
+			font-weight: 600;
+			letter-spacing: .1rem;
+			text-decoration: none;
+			text-transform: uppercase;
+			float: left;
+		}
+
+		.links2 > a:hover {
+			border: 2px solid #FFFF00;
+  			color: #0000CD;
+		}
+
+		.icons > a {
+			color: #636b6f;
+			padding: 5px 35px;
+			font-size: 20px;
+			text-decoration: none;
+			float: right;
+		}
+
+		.icons > a:hover {
+			border: 2px solid red;
+  			color: #0000CD;
+		}
+		
+		table tbody tr td{
+			text-align: center;
+		}
+		p {
+			font-size: 70%;
+		}
+
+		.float-button{
+			position: fixed;
+			bottom: 40px;
+			right: 40px;
+		}
+		.material-icons.blue { 
+			color:#0000CD;
+		}
+
+		.material-icons.white { 
+			color: white;
+		}
+
+		.material-icons.md-60 { 
+			font-size: 60px; 
+		}
+
+		.material-icons.md-18 { font-size: 14px; }
+
+		@keyframes neon {
+			from {
+				filter: drop-shadow(0 0 0 var(--cor-neon));
+			}
+			to {
+				filter: drop-shadow(0 0 30px var(--cor-neon));
+			}
+		}
+
+		h2{
+			animation: neon 3s alternate infinite ease-in-out;
+			color: yellow; 
+			text-shadow: 0.1em 0.1em 0.2em black;
+		}
+
+		h6{
+			animation: neon 3s alternate infinite ease-in-out;
+			color: yellow; 
+			text-shadow: 0.1em 0.1em 0.2em black;
+		}
+
+		.promocao {
+			--cor-neon: blue;
+		}
+
+		.card-animal{
+			float:right;
+		}
+
+		.centralizado {
+			margin: 5px;
+		}
+
