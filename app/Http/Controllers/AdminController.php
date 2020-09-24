@@ -6,6 +6,7 @@ use App\Admin;
 use App\Anuncio;
 use App\Banner;
 use App\Categoria;
+use App\CompraLivro;
 use App\CupomDesconto;
 use App\EntradaSaida;
 use App\Entrega;
@@ -17,10 +18,12 @@ use App\PedidoProduto;
 use App\Post;
 use App\Produto;
 use App\User;
+use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -964,6 +967,95 @@ class AdminController extends Controller
         
         $cats = Categoria::all();
         return view('admin.estoque_produtos',compact('prods','cats'));
+    }
+
+    public function indexCompraLivros()
+    {
+        $recibos = CompraLivro::paginate(10);
+        $view = "inicial";
+        $turmas = DB::table('compra_livros')->select(DB::raw("turma"))->groupBy('turma')->get();
+        return view('admin.compra_livros',compact('view','turmas','recibos'));
+    }
+
+    public function novaCompraLivro(Request $request)
+    {
+        $recibo = new CompraLivro();
+        $recibo->nomeAluno = $request->input('nomeAluno');
+        $recibo->turma = $request->input('turma');
+        $recibo->ensino = $request->input('ensino');
+        $recibo->nomeResp = $request->input('nomeResp');
+        $recibo->cpf = $request->input('cpf');
+        $recibo->valor = $request->input('valor');
+        $recibo->formaPagamento = $request->input('formaPagamento');
+        $recibo->user = Auth::user()->name;
+        $recibo->save();
+        return back();
+    }
+
+    public function gerarRecibo($id)
+    {
+        $recibo = CompraLivro::find($id);
+        $pdf = PDF::loadView('admin.recibo_compralivro_pdf', compact('recibo'));
+        return $pdf->setPaper('a4')->stream('Recibo '.$recibo->nomeAluno.'.pdf');
+    }
+
+    public function filtroCompraLivro(Request $request)
+    {
+        $nome = $request->input('nome');
+        $turma = $request->input('turma');
+        if(isset($nome)){
+            if(isset($turma)){
+                $recibos = CompraLivro::where('nomeAluno','like',"%$nome%")->where('turma',"$turma")->orderBy('nomeAluno')->paginate(50);
+            } else {
+                $recibos = CompraLivro::where('nomeAluno','like',"%$nome%")->orderBy('nomeAluno')->paginate(50);
+            }
+        } else {
+            if(isset($turma)){
+                $recibos = CompraLivro::where('turma',"$turma")->orderBy('nomeAluno')->paginate(50);
+            } else {
+                return redirect('/admin/compraLivro');
+            }
+        }
+        $turmas = DB::table('compra_livros')->select(DB::raw("turma"))->groupBy('turma')->get();
+        $view = "filtro";
+        return view('admin.compra_livros', compact('view','turmas','recibos'));
+    }
+
+    public function editarCompraLivro(Request $request, $id)
+    {
+        $recibo = CompraLivro::find($id);
+        if($request->input('nomeAluno')!=""){
+            $recibo->nomeAluno = $request->input('nomeAluno');
+        }
+        if($request->input('turma')!=""){
+            $recibo->turma = $request->input('turma');
+        }
+        if($request->input('ensino')!=""){
+            $recibo->ensino = $request->input('ensino');
+        }
+        if($request->input('nomeResp')!=""){
+            $recibo->nomeResp = $request->input('nomeResp');
+        }
+        if($request->input('cpf')!=""){
+            $recibo->cpf = $request->input('cpf');
+        }
+        if($request->input('valor')!=""){
+            $recibo->valor = $request->input('valor');
+        }
+        if($request->input('formaPagamento')!=""){
+            $recibo->formaPagamento = $request->input('formaPagamento');
+        }
+        $recibo->save();
+        return back();
+    }
+
+    public function apagarCompraLivro($id)
+    {
+        $recibo = CompraLivro::find($id);
+        if(isset($recibo)){
+            $recibo->delete();
+        }
+        return back();
     }
 
     public function indexRelatorios()

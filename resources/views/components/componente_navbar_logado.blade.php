@@ -27,6 +27,9 @@
             <li @if($current=="estoque") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/admin/estoque">Estoque</a>
             </li>
+            <li @if($current=="recibos") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/admin/recibos">Recibos</a>
+            </li>
             <li @if($current=="relatorios") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/admin/relatorios">Relatórios</a>
             </li>
@@ -36,6 +39,9 @@
             @auth("outro")
             <li @if($current=="home") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/outro">Home</a>
+            </li>
+            <li @if($current=="recibos") class="nav-item active" @else class="nav-item" @endif>
+                <a class="nav-link" href="/outro/recibos">Recibos</a>
             </li>
             <li @if($current=="principal") class="nav-item active" @else class="nav-item" @endif>
                 <a class="nav-link" href="/outro/principal">Página Principal</a>

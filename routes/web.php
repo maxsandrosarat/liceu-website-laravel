@@ -35,6 +35,7 @@ Route::group(['prefix' => 'admin'], function() {
 
     Route::get('/principal', function () { return view('admin.home_principal'); })->middleware('auth:admin');
     Route::get('/users', function () { return view('admin.home_users'); })->middleware('auth:admin');
+    Route::get('/recibos', function () { return view('admin.home_recibos'); })->middleware('auth:admin');
 
     Route::get('/banner', 'AdminController@indexBanners');
     Route::post('/banner', 'AdminController@novoBanner');
@@ -128,6 +129,15 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('/saida/{id}', 'AdminController@saida');
     });
 
+    Route::group(['prefix' => 'compraLivro'], function() {
+        Route::get('/', 'AdminController@indexCompraLivros');
+        Route::post('/', 'AdminController@novaCompraLivro');
+        Route::get('/pdf/{id}', 'AdminController@gerarRecibo');
+        Route::get('/filtro', 'AdminController@filtroCompraLivro');
+        Route::post('/editar/{id}', 'AdminController@editarCompraLivro');
+        Route::get('/apagar/{id}', 'AdminController@apagarCompraLivro');
+    });
+
     Route::group(['prefix' => 'relatorios'], function() {
         Route::get('/', 'AdminController@indexRelatorios');
         Route::get('/estoque', 'AdminController@relatorioEstoque');
@@ -150,6 +160,7 @@ Route::group(['prefix' => 'outro'], function() {
     Route::get('/', 'OutroController@index')->name('outro.dashboard');
 
     Route::get('/principal', function () { return view('outro.home_principal'); })->middleware('auth:outro');
+    Route::get('/recibos', function () { return view('outro.home_recibos'); })->middleware('auth:outro');
 
     Route::get('/banner', 'OutroController@indexBanners');
     Route::post('/banner', 'OutroController@novoBanner');
@@ -165,6 +176,13 @@ Route::group(['prefix' => 'outro'], function() {
     Route::post('/foto', 'OutroController@novaFoto');
     Route::post('/foto/editar/{id}', 'OutroController@editarFoto');
     Route::get('/foto/apagar/{id}', 'OutroController@apagarFoto');
+
+    Route::group(['prefix' => 'compraLivro'], function() {
+        Route::get('/', 'OutroController@indexCompraLivros');
+        Route::post('/', 'OutroController@novaCompraLivro');
+        Route::get('/pdf/{id}', 'OutroController@gerarRecibo');
+        Route::get('/filtro', 'OutroController@filtroCompraLivro');
+    });
 });
 
 Route::get('/compras', function() {

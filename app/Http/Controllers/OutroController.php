@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Banner;
+use App\CompraLivro;
 use App\Foto;
 use App\Post;
+use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OutroController extends Controller
 {
@@ -200,5 +204,57 @@ class OutroController extends Controller
             $foto->delete();
         }
         return back();
+    }
+
+    public function indexCompraLivros()
+    {
+        $recibos = CompraLivro::paginate(10);
+        $view = "inicial";
+        $turmas = DB::table('compra_livros')->select(DB::raw("turma"))->groupBy('turma')->get();
+        return view('outro.compra_livros',compact('view','turmas','recibos'));
+    }
+
+    public function novaCompraLivro(Request $request)
+    {
+        $recibo = new CompraLivro();
+        $recibo->nomeAluno = $request->input('nomeAluno');
+        $recibo->turma = $request->input('turma');
+        $recibo->ensino = $request->input('ensino');
+        $recibo->nomeResp = $request->input('nomeResp');
+        $recibo->cpf = $request->input('cpf');
+        $recibo->valor = $request->input('valor');
+        $recibo->formaPagamento = $request->input('formaPagamento');
+        $recibo->user = Auth::user()->name;
+        $recibo->save();
+        return back();
+    }
+
+    public function gerarRecibo($id)
+    {
+        $recibo = CompraLivro::find($id);
+        $pdf = PDF::loadView('outro.recibo_compralivro_pdf', compact('recibo'));
+        return $pdf->setPaper('a4')->stream('Recibo '.$recibo->nomeAluno.'.pdf');
+    }
+
+    public function filtroCompraLivro(Request $request)
+    {
+        $nome = $request->input('nome');
+        $turma = $request->input('turma');
+        if(isset($nome)){
+            if(isset($turma)){
+                $recibos = CompraLivro::where('nomeAluno','like',"%$nome%")->where('turma',"$turma")->orderBy('nomeAluno')->paginate(50);
+            } else {
+                $recibos = CompraLivro::where('nomeAluno','like',"%$nome%")->orderBy('nomeAluno')->paginate(50);
+            }
+        } else {
+            if(isset($turma)){
+                $recibos = CompraLivro::where('turma',"$turma")->orderBy('nomeAluno')->paginate(50);
+            } else {
+                return redirect('/outro/compraLivro');
+            }
+        }
+        $turmas = DB::table('compra_livros')->select(DB::raw("turma"))->groupBy('turma')->get();
+        $view = "filtro";
+        return view('outro.compra_livros', compact('view','turmas','recibos'));
     }
 }

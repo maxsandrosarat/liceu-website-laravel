@@ -19,7 +19,8 @@
 			<li><a href="/admin">Usuário Admin: {{explode(" ", Auth::guard('admin')->user()->name)[0]}}</a></li>
 			<li><a href="/">HOME</a></li>
 			<li><a href="/admin/users">USUÁRIOS</a></li>
-			<li><a href="/admin/principal">LAYOUT INICIAL</a></li>
+			<li><a href="/admin/recibos">RECIBOS</a></li>
+			<li><a href="/admin/principal">POSTAGENS</a></li>
 			<li><a href="/admin/cadastros">CADASTROS</a></li>
 			<li><a href="/admin/pedidos">PEDIDOS</a></li>
 			<li><a href="/admin/estoque">ESTOQUE</a></li>
@@ -38,8 +39,8 @@
 				@auth("outro")
 				<li><a href="/outro">Usuário: {{explode(" ", Auth::guard('outro')->user()->name)[0]}}</a></li>
 				<li><a href="/">HOME</a></li>
-				<li><a href="/outro/principal">PÁGINA PRINCIPAL</a></li>
-
+				<li><a href="/outro/recibos">RECIBOS</a></li>
+				<li><a href="/outro/principal">POSTAGENS</a></li>
 				@component('components.componente_menu_lista')
 		    	@endcomponent
 				<br/>
