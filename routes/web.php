@@ -136,6 +136,7 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('/filtro', 'AdminController@filtroCompraLivro');
         Route::post('/editar/{id}', 'AdminController@editarCompraLivro');
         Route::get('/apagar/{id}', 'AdminController@apagarCompraLivro');
+        Route::post('/relatorio', 'AdminController@gerarPdfRelatorio');
     });
 
     Route::group(['prefix' => 'relatorios'], function() {

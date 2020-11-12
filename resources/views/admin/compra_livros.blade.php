@@ -95,8 +95,22 @@
                     </select>
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
                 </form>
-                </div>
-                <br/>
+            </div>
+            <hr/>
+            <div class="card border">
+                <h5>Relatório por Turma: </h5>
+                <form class="form-inline my-2 my-lg-0" method="POST" action="/admin/compraLivro/relatorio">
+                    @csrf
+                    <select class="custom-select" id="turma" name="turma">
+                        <option value="">Selecione uma turma</option>
+                        @foreach ($turmas as $turma)
+                            <option value="{{$turma->turma}}">{{$turma->turma}}º ANO</option>
+                        @endforeach
+                    </select>
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit" target="_blank">Gerar</button>
+                </form>
+            </div>
+            <br/>
             <h5>Exibindo {{$recibos->count()}} de {{$recibos->total()}} de Recibos ({{$recibos->firstItem()}} a {{$recibos->lastItem()}})</h5>
             <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">

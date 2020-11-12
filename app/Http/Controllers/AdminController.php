@@ -1058,6 +1058,16 @@ class AdminController extends Controller
         return back();
     }
 
+    public function gerarPdfRelatorio(Request $request)
+    {
+        $turma = $request->input('turma');
+        $compras = CompraLivro::where('turma',"$turma")->orderBy('nomeAluno')->get();
+        $pdf = PDF::loadView('admin.compras_pdf', compact('turma','compras'));
+        return $pdf->setPaper('a4')->stream('Relatória Compra Livro '.$turma.'º ANO.pdf');
+    }
+
+
+    //ENTRADA & SAIDA
     public function indexRelatorios()
     {
         return view('relatorios.home_relatorios');
