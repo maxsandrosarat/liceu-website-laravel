@@ -16,7 +16,8 @@ class CreateCompraLivrosTable extends Migration
         Schema::create('compra_livros', function (Blueprint $table) {
             $table->id();
             $table->string('nomeAluno');
-            $table->integer('turma');
+            $table->integer('serie');
+            $table->string('turma')->default('A');
             $table->enum('ensino',['EFI','EFII','EM','TODOS']);
             $table->string('nomeResp');
             $table->string('cpf');

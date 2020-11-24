@@ -16,11 +16,9 @@
             <table>
                 <thead>
                     <tr>
-                        <th >Aluno</th>
-                        <th>Série</th>
-                        <th>Ensino</th>
+                        <th>Nome do Aluno</th>
+                        <th>Série/Turma</th>
                         <th>Responsável</th>
-                        <th>CPF</th>
                         <th>Valor</th>
                         <th>Pagamento</th>
                         <th>Usuário</th>
@@ -31,10 +29,8 @@
                     @foreach ($compras as $compra)
                     <tr>
                         <td>{{$compra->nomeAluno}}</td>
-                        <td>{{$compra->turma}}º ANO</td>
-                        <td>{{$compra->ensino}}</td>
+                        <td>{{$compra->serie}}º ANO {{$compra->turma}} ({{$compra->ensino}})</td>
                         <td>{{$compra->nomeResp}}</td>
-                        <td>{{$compra->cpf}}</td>
                         <td>{{ 'R$ '.number_format($compra->valor, 2, ',', '.')}}</td>
                         <td>{{$compra->formaPagamento}}</td>
                         <td>{{$compra->user}}</td>

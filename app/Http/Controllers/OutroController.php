@@ -210,14 +210,16 @@ class OutroController extends Controller
     {
         $recibos = CompraLivro::paginate(10);
         $view = "inicial";
+        $series = DB::table('compra_livros')->select(DB::raw("serie"))->groupBy('serie')->get();
         $turmas = DB::table('compra_livros')->select(DB::raw("turma"))->groupBy('turma')->get();
-        return view('outro.compra_livros',compact('view','turmas','recibos'));
+        return view('outro.compra_livros',compact('view','series','turmas','recibos'));
     }
 
     public function novaCompraLivro(Request $request)
     {
         $recibo = new CompraLivro();
         $recibo->nomeAluno = $request->input('nomeAluno');
+        $recibo->serie = $request->input('serie');
         $recibo->turma = $request->input('turma');
         $recibo->ensino = $request->input('ensino');
         $recibo->nomeResp = $request->input('nomeResp');
@@ -239,22 +241,40 @@ class OutroController extends Controller
     public function filtroCompraLivro(Request $request)
     {
         $nome = $request->input('nome');
+        $serie = $request->input('serie');
         $turma = $request->input('turma');
         if(isset($nome)){
-            if(isset($turma)){
-                $recibos = CompraLivro::where('nomeAluno','like',"%$nome%")->where('turma',"$turma")->orderBy('nomeAluno')->paginate(50);
+            if(isset($serie)){
+                if(isset($turma)){
+                    $recibos = CompraLivro::where('nomeAluno','like',"%$nome%")->where('serie',"$serie")->where('turma',"$turma")->orderBy('nomeAluno')->paginate(50);
+                } else {
+                    $recibos = CompraLivro::where('nomeAluno','like',"%$nome%")->where('serie',"$serie")->orderBy('nomeAluno')->paginate(50);
+                }
             } else {
-                $recibos = CompraLivro::where('nomeAluno','like',"%$nome%")->orderBy('nomeAluno')->paginate(50);
+                if(isset($turma)){
+                    $recibos = CompraLivro::where('nomeAluno','like',"%$nome%")->where('turma',"$turma")->orderBy('nomeAluno')->paginate(50);
+                } else {
+                    $recibos = CompraLivro::where('nomeAluno','like',"%$nome%")->orderBy('nomeAluno')->paginate(50);
+                }
             }
         } else {
-            if(isset($turma)){
-                $recibos = CompraLivro::where('turma',"$turma")->orderBy('nomeAluno')->paginate(50);
+            if(isset($serie)){
+                if(isset($turma)){
+                    $recibos = CompraLivro::where('serie',"$serie")->where('turma',"$turma")->orderBy('nomeAluno')->paginate(50);
+                } else {
+                    $recibos = CompraLivro::where('serie',"$serie")->orderBy('nomeAluno')->paginate(50);
+                }
             } else {
-                return redirect('/outro/compraLivro');
+                if(isset($turma)){
+                    $recibos = CompraLivro::where('turma',"$turma")->orderBy('nomeAluno')->paginate(50);
+                } else {
+                    return redirect('/outro/compraLivro');
+                }
             }
         }
+        $series = DB::table('compra_livros')->select(DB::raw("serie"))->groupBy('serie')->get();
         $turmas = DB::table('compra_livros')->select(DB::raw("turma"))->groupBy('turma')->get();
         $view = "filtro";
-        return view('outro.compra_livros', compact('view','turmas','recibos'));
+        return view('outro.compra_livros', compact('view','series','turmas','recibos'));
     }
 }

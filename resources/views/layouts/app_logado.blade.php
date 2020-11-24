@@ -39,9 +39,11 @@
 			color: white;
 		}
 
-		.material-icons.md-60 { 
-			font-size: 60px; 
-        }
+		.material-icons.md-18 { font-size: 18px; }
+		.material-icons.md-24 { font-size: 24px; }
+		.material-icons.md-36 { font-size: 36px; }
+		.material-icons.md-48 { font-size: 24px; }
+		.material-icons.md-60 { font-size: 60px; }
         table tbody tr td{
             text-align: center;
         }
@@ -141,6 +143,11 @@
                 id('botao-senha').className = "btn btn-success btn-sm";
                 id('botao-senha').title = "Mostrar Senha";
             }
+        }
+
+        function getValor(campo){
+            var valor = id(campo).value.replace(',','.');
+            id(campo).value = parseFloat(valor);
         }
     </script>
 </body>

@@ -23,9 +23,11 @@
                                 <form action="/outro/compraLivro" method="POST">
                                     @csrf
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="nomeAluno" id="nomeAluno" placeholder="Nome do Aluno" required>
-                                        <select class="custom-select" id="turma" name="turma" required>
-                                            <option value="">Selecione uma turma</option>
+                                        <label for="nomeAluno">Nome do Aluno</label>
+                                        <input type="text" class="form-control" name="nomeAluno" id="nomeAluno" placeholder="Nome Completo" required>
+                                        <label for="serie">Série</label>
+                                        <select class="custom-select" id="serie" name="serie" required>
+                                            <option value="">Selecione uma série</option>
                                             <option value="1">1º ANO</option>
                                             <option value="2">2º ANO</option>
                                             <option value="3">3º ANO</option>
@@ -37,6 +39,9 @@
                                             <option value="9">9º ANO</option>
                                         </select>
                                         <br/>
+                                        <label for="turma">Turma</label>
+                                        <input type="text" class="form-control" name="turma" id="turma" placeholder="Exemplo: A" required>
+                                        <label for="ensino">Ensino</label>
                                         <select class="custom-select" id="ensino" name="ensino" required>
                                             <option value="">Selecione o ensino</option>
                                             <option value="EFI">Ensino Fundamental I</option>
@@ -44,11 +49,11 @@
                                             <option value="EM">Ensino Médio</option>
                                             <option value="TODOS">Todos Ensinos</option>
                                         </select>
-                                        <br/>
+                                        <br/><br/>
                                         <input type="text" class="form-control" name="nomeResp" id="nomeResp" placeholder="Nome do Responsável" required>
                                         <input type="text" class="form-control" name="cpf" id="cpf" placeholder="CPF do Responsável" required>
                                         <label for="valor">Valor: R$
-                                        <input type="number" class="form-control" name="valor" id="valor" required></label>
+                                        <input type="text" class="form-control" name="valor" id="valor" onblur="getValor('valor');" required></label>
                                         <select class="custom-select" id="formaPagamento" name="formaPagamento" required>
                                             <option value="">Selecione a forma de pagamento</option>
                                             <option value="Dinheiro">Dinheiro</option>
@@ -87,16 +92,22 @@
                 <form class="form-inline my-2 my-lg-0" method="GET" action="/outro/compraLivro/filtro">
                     @csrf
                     <input class="form-control mr-sm-2" type="text" placeholder="Nome do Aluno" name="nome">
+                    <select class="custom-select" id="serie" name="serie">
+                        <option value="">Selecione uma série</option>
+                        @foreach ($series as $serie)
+                            <option value="{{$serie->serie}}">{{$serie->serie}}º ANO</option>
+                        @endforeach
+                    </select>
                     <select class="custom-select" id="turma" name="turma">
                         <option value="">Selecione uma turma</option>
                         @foreach ($turmas as $turma)
-                            <option value="{{$turma->turma}}">{{$turma->turma}}º ANO</option>
+                            <option value="{{$turma->turma}}">{{$turma->turma}}</option>
                         @endforeach
                     </select>
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
                 </form>
-                </div>
-                <br/>
+            </div>
+            <br/>
             <h5>Exibindo {{$recibos->count()}} de {{$recibos->total()}} de Recibos ({{$recibos->firstItem()}} a {{$recibos->lastItem()}})</h5>
             <div class="table-responsive-xl">
             <table class="table table-striped table-ordered table-hover">
@@ -117,7 +128,7 @@
                     @foreach ($recibos as $recibo)
                     <tr>
                         <td>{{$recibo->id}}</td>
-                        <td>{{$recibo->nomeAluno}} @if($recibo->turma!=0) {{$recibo->turma}}º ANO @else Todas Turmas @endif @if($recibo->ensino=='EFI') (Fund. 1) @else @if($recibo->ensino=='EFII') (Fund. 2) @else @if($recibo->ensino=='EM') (Médio) @else (Todos Ensinos) @endif @endif @endif</td>
+                        <td>{{$recibo->nomeAluno}} @if($recibo->serie!=0) {{$recibo->serie}}º ANO {{$recibo->turma}} @else Todas Turmas @endif @if($recibo->ensino=='EFI') (Fund. 1) @else @if($recibo->ensino=='EFII') (Fund. 2) @else @if($recibo->ensino=='EM') (Médio) @else (Todos Ensinos) @endif @endif @endif</td>
                         <td>{{$recibo->nomeResp}} ({{$recibo->cpf}})</td>
                         <td>{{ 'R$ '.number_format($recibo->valor, 2, ',', '.')}}</td>
                         <td>{{$recibo->formaPagamento}}</td>
@@ -125,7 +136,7 @@
                         <td>{{date("d/m/Y H:i", strtotime($recibo->created_at))}}</td>
                         <td>{{date("d/m/Y H:i", strtotime($recibo->updated_at))}}</td>
                         <td>
-                            <a target="_blank" href="/outro/compraLivro/pdf/{{$recibo->id}}" class="btn btn-sm btn-success">Gerar Recibo</a>
+                            <a target="_blank" href="/outro/compraLivro/pdf/{{$recibo->id}}" class="badge badge-success">Gerar Recibo</a>
                         </td>
                     </tr>
                     @endforeach

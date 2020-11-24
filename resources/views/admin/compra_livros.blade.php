@@ -23,9 +23,11 @@
                                 <form action="/admin/compraLivro" method="POST">
                                     @csrf
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="nomeAluno" id="nomeAluno" placeholder="Nome do Aluno" required>
-                                        <select class="custom-select" id="turma" name="turma" required>
-                                            <option value="">Selecione uma turma</option>
+                                        <label for="nomeAluno">Nome do Aluno</label>
+                                        <input type="text" class="form-control" name="nomeAluno" id="nomeAluno" placeholder="Nome Completo" required>
+                                        <label for="serie">Série</label>
+                                        <select class="custom-select" id="serie" name="serie" required>
+                                            <option value="">Selecione uma série</option>
                                             <option value="1">1º ANO</option>
                                             <option value="2">2º ANO</option>
                                             <option value="3">3º ANO</option>
@@ -37,6 +39,9 @@
                                             <option value="9">9º ANO</option>
                                         </select>
                                         <br/>
+                                        <label for="turma">Turma</label>
+                                        <input type="text" class="form-control" name="turma" id="turma" placeholder="Exemplo: A" required>
+                                        <label for="ensino">Ensino</label>
                                         <select class="custom-select" id="ensino" name="ensino" required>
                                             <option value="">Selecione o ensino</option>
                                             <option value="EFI">Ensino Fundamental I</option>
@@ -44,11 +49,11 @@
                                             <option value="EM">Ensino Médio</option>
                                             <option value="TODOS">Todos Ensinos</option>
                                         </select>
-                                        <br/>
+                                        <br/><br/>
                                         <input type="text" class="form-control" name="nomeResp" id="nomeResp" placeholder="Nome do Responsável" required>
                                         <input type="text" class="form-control" name="cpf" id="cpf" placeholder="CPF do Responsável" required>
                                         <label for="valor">Valor: R$
-                                        <input type="number" class="form-control" name="valor" id="valor" required></label>
+                                        <input type="text" class="form-control" name="valor" id="valor" onblur="getValor('valor');" required></label>
                                         <select class="custom-select" id="formaPagamento" name="formaPagamento" required>
                                             <option value="">Selecione a forma de pagamento</option>
                                             <option value="Dinheiro">Dinheiro</option>
@@ -87,10 +92,16 @@
                 <form class="form-inline my-2 my-lg-0" method="GET" action="/admin/compraLivro/filtro">
                     @csrf
                     <input class="form-control mr-sm-2" type="text" placeholder="Nome do Aluno" name="nome">
+                    <select class="custom-select" id="serie" name="serie">
+                        <option value="">Selecione uma série</option>
+                        @foreach ($series as $serie)
+                            <option value="{{$serie->serie}}">{{$serie->serie}}º ANO</option>
+                        @endforeach
+                    </select>
                     <select class="custom-select" id="turma" name="turma">
                         <option value="">Selecione uma turma</option>
                         @foreach ($turmas as $turma)
-                            <option value="{{$turma->turma}}">{{$turma->turma}}º ANO</option>
+                            <option value="{{$turma->turma}}">{{$turma->turma}}</option>
                         @endforeach
                     </select>
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filtrar</button>
@@ -101,10 +112,16 @@
                 <h5>Relatório por Turma: </h5>
                 <form class="form-inline my-2 my-lg-0" method="POST" action="/admin/compraLivro/relatorio">
                     @csrf
+                    <select class="custom-select" id="serie" name="serie">
+                        <option value="">Selecione uma série</option>
+                        @foreach ($series as $serie)
+                            <option value="{{$serie->serie}}">{{$serie->serie}}º ANO</option>
+                        @endforeach
+                    </select>
                     <select class="custom-select" id="turma" name="turma">
                         <option value="">Selecione uma turma</option>
                         @foreach ($turmas as $turma)
-                            <option value="{{$turma->turma}}">{{$turma->turma}}º ANO</option>
+                            <option value="{{$turma->turma}}">{{$turma->turma}}</option>
                         @endforeach
                     </select>
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit" target="_blank">Gerar</button>
@@ -117,7 +134,7 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>Código</th>
-                        <th>Aluno/Turma/Ensino</th>
+                        <th>Aluno/Série/Turma/Ensino</th>
                         <th>Responsável/CPF</th>
                         <th>Valor</th>
                         <th>Forma Pagamento</th>
@@ -131,7 +148,7 @@
                     @foreach ($recibos as $recibo)
                     <tr>
                         <td>{{$recibo->id}}</td>
-                        <td>{{$recibo->nomeAluno}} @if($recibo->turma!=0) {{$recibo->turma}}º ANO @else Todas Turmas @endif @if($recibo->ensino=='EFI') (Fund. 1) @else @if($recibo->ensino=='EFII') (Fund. 2) @else @if($recibo->ensino=='EM') (Médio) @else (Todos Ensinos) @endif @endif @endif</td>
+                        <td>{{$recibo->nomeAluno}} @if($recibo->serie!=0) {{$recibo->serie}}º ANO {{$recibo->turma}} @else Todas Turmas @endif @if($recibo->ensino=='EFI') (Fund. 1) @else @if($recibo->ensino=='EFII') (Fund. 2) @else @if($recibo->ensino=='EM') (Médio) @else (Todos Ensinos) @endif @endif @endif</td>
                         <td>{{$recibo->nomeResp}} ({{$recibo->cpf}})</td>
                         <td>{{ 'R$ '.number_format($recibo->valor, 2, ',', '.')}}</td>
                         <td>{{$recibo->formaPagamento}}</td>
@@ -139,15 +156,15 @@
                         <td>{{date("d/m/Y H:i", strtotime($recibo->created_at))}}</td>
                         <td>{{date("d/m/Y H:i", strtotime($recibo->updated_at))}}</td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#exampleModal{{$recibo->id}}" data-toggle="tooltip" data-placement="left" title="Editar">
-                                <i class="material-icons md-48">edit</i>
+                            <button type="button" class="badge badge-warning" data-toggle="modal" data-target="#exampleModal{{$recibo->id}}" data-toggle="tooltip" data-placement="left" title="Editar">
+                                <i class="material-icons md-18">edit</i>
                             </button>
                             <!-- Modal -->
                             <div class="modal fade" id="exampleModal{{$recibo->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Editar recibouto</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Editar Recibo - Nº {{$recibo->id}}</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -160,9 +177,9 @@
                                                     <div class="form-group">
                                                         <label for="nomeAluno">Nome do Aluno</label>
                                                         <input type="text" class="form-control" name="nomeAluno" id="nomeAluno" value="{{$recibo->nomeAluno}}" required>
-                                                        <label for="turma">Turma</label>
-                                                        <select class="custom-select" id="turma" name="turma" required>
-                                                            <option value="{{$recibo->turma}}">{{$recibo->turma}}º ANO</option>
+                                                        <label for="serie">Série</label>
+                                                        <select class="custom-select" id="serie" name="serie" required>
+                                                            <option value="{{$recibo->serie}}">{{$recibo->serie}}º ANO</option>
                                                             <option value="1">1º ANO</option>
                                                             <option value="2">2º ANO</option>
                                                             <option value="3">3º ANO</option>
@@ -174,6 +191,8 @@
                                                             <option value="9">9º ANO</option>
                                                         </select>
                                                         <br/>
+                                                        <label for="turma">Turma</label>
+                                                        <input type="text" class="form-control" name="turma" id="turma" value="{{$recibo->turma}}" required>
                                                         <label for="ensino">Ensino</label>
                                                         <select class="custom-select" id="ensino" name="ensino" required>
                                                             <option value="{{$recibo->ensino}}">{{$recibo->ensino}}</option>
@@ -189,18 +208,18 @@
                                                         <label for="cpf">CPF do Responsável</label>
                                                         <input type="text" class="form-control" name="cpf" id="cpf" value="{{$recibo->cpf}}" required>
                                                         <label for="valor">Valor</label>
-                                                        <input type="number" class="form-control" name="valor" id="valor" value="{{$recibo->valor}}" required>
+                                                        <input type="text" class="form-control" name="valor" id="valorE" value="{{$recibo->valor}}" onblur="getValor('valorE');" required>
                                                         <label for="formaPagamento">Forma de Pagamento</label>
                                                         <select class="custom-select" id="formaPagamento" name="formaPagamento" required>
                                                             <option value="{{$recibo->formaPagamento}}">{{$recibo->formaPagamento}}</option>
                                                             <option value="Dinheiro">Dinheiro</option>
                                                             <option value="Cartão Débito">Cartão Débito</option>
                                                             <option value="Cartão Crédito (à Vista)">Cartão Crédito (à Vista)</option>
-                                                            <option value="Cartão Crédito (2x)">Cartão Crédito (2x)/option>
-                                                            <option value="Cartão Crédito (2x)">Cartão Crédito (3x)/option>
-                                                            <option value="Cartão Crédito (2x)">Cartão Crédito (4x)/option>
-                                                            <option value="Cartão Crédito (2x)">Cartão Crédito (5x)/option>
-                                                            <option value="Cartão Crédito (2x)">Cartão Crédito (6x)/option>
+                                                            <option value="Cartão Crédito (2x)">Cartão Crédito (2x)</option>
+                                                            <option value="Cartão Crédito (2x)">Cartão Crédito (3x)</option>
+                                                            <option value="Cartão Crédito (2x)">Cartão Crédito (4x)</option>
+                                                            <option value="Cartão Crédito (2x)">Cartão Crédito (5x)</option>
+                                                            <option value="Cartão Crédito (2x)">Cartão Crédito (6x)</option>
                                                         </select>
                                                     </div>
                                                     <div class="modal-footer">
@@ -213,8 +232,8 @@
                                 </div>
                                 </div>
                             </div>
-                            <a href="/admin/compraLivro/apagar/{{$recibo->id}}" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="right" title="Inativar"><i class="material-icons md-48">delete</i></a>
-                            <a target="_blank" href="/admin/compraLivro/pdf/{{$recibo->id}}" class="btn btn-sm btn-success">Gerar Recibo</a>
+                            <a href="/admin/compraLivro/apagar/{{$recibo->id}}" class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="Inativar"><i class="material-icons md-18">delete</i></a>
+                            <a target="_blank" href="/admin/compraLivro/pdf/{{$recibo->id}}" class="badge badge-success">Gerar Recibo</a>
                         </td>
                     </tr>
                     @endforeach
