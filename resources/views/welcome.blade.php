@@ -118,25 +118,19 @@
 				<div class="inner">
 					<header class="align-center">
 						<p class="special">TEMOS MUITO ORGULHO DOS NOSSOS ALUNOS</p>
-						<h2>Outros Eventos</h2>
+						<h2>Álbuns de Fotos</h2>
 					</header>
-					<div class="gallery">
-						@foreach ($fotos as $foto)
-						<div>
-							<div class="image fit">
-								<img src="storage/{{$foto->foto}}" alt="foto{{$foto->id}}" />
-							</div>
-						</div>
-						@endforeach
+					<div class="gallery" id="galeria">
+						
 					</div>
 				</div>
 			</section>
-
+			{!! csrf_field() !!}
             @component('components.componente_footer')
-            @endcomponent
+			@endcomponent
 
             <!-- Scripts -->
-			<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+			<script src="{{ asset('js/jquery.2.1.3.min.js') }}"></script>
 			<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
             <script src="{{ asset('js/app.js') }}"></script>
@@ -145,6 +139,7 @@
             <script src="{{ asset('js/skel.min.js') }}"></script>
             <script src="{{ asset('js/util.js') }}"></script>
 			<script src="{{ asset('js/main.js') }}"></script>
+			<script src="{{ asset('js/jquery.form.js') }}"></script>
 			<script type="text/javascript">
 				function validarSenhaForca(){
 					var senha = document.getElementById('senhaForca').value;
@@ -233,7 +228,67 @@
 				function principal(){
 					window.location.href = "/";
 				}
-				
+
+				function gostei(id)
+				{
+					$.post("/album/gostei",{id: id,_token:$('input[name="_token"]').attr("value")},function (response) {});
+					carregarAlbuns();
+				}
+
+				function naoGostei(id)
+				{
+					$.post("/album/naoGostei",{id: id,_token:$('input[name="_token"]').attr("value")},function (response) {});
+					carregarAlbuns();
+				}
+
+				function montarDiv(album){
+					s = "";
+					if(album.foto_capa===''){
+					s = '<div>' +
+						'<div class="image fit">' +
+							'<i class="material-icons md-200">no_photography</i>' +
+							'<h5>' + album.titulo + '</h5>' +
+							'<a href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="Visualizações"><i class="material-icons">visibility</i><span class="badge badge-light">' + album.total_visualizacao + '</span></a>' +
+							'<a href="javascript:void(0);" onclick="gostei('+ album.id + ');" data-toggle="tooltip" data-placement="bottom" title="Curtir"><i class="material-icons">thumb_up</i><span class="badge badge-light">' + album.total_gostei + '</span></a>' +
+							'<a href="javascript:void(0);" onclick="naoGostei('+ album.id + ');" data-toggle="tooltip" data-placement="bottom" title="Não Curtir"><i class="material-icons">thumb_down</i><span class="badge badge-light">' + album.total_naogostei + '</span></a>' +
+							'<p class="card-text">' + album.descricao + '</p>' +
+						'</div>' +
+					'</div>'
+					} else {
+						s = '<div>' +
+							'<div class="image fit">' +
+								'<a href="/album/' + album.id +'"><img src="/storage/' + album.foto_capa + '" alt="' + album.titulo + '"></a>' +
+								'<h5>' + album.titulo + '</h5>' +
+								'<a href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="Visualizações"><i class="material-icons">visibility</i><span class="badge badge-light">' + album.total_visualizacao + '</span></a>' +
+								'<a href="javascript:void(0);" onclick="gostei('+ album.id + ');" data-toggle="tooltip" data-placement="bottom" title="Curtir"><i class="material-icons">thumb_up</i><span class="badge badge-light">' + album.total_gostei + '</span></a>' +
+								'<a href="javascript:void(0);" onclick="naoGostei('+ album.id + ');" data-toggle="tooltip" data-placement="bottom" title="Não Curtir"><i class="material-icons">thumb_down</i><span class="badge badge-light">' + album.total_naogostei + '</span></a>' +
+								'<p class="card-text">' + album.descricao + '</p>' +
+							'</div>' +
+						'</div>'
+					}
+					return s;
+				}
+
+				function montarAlbuns(dados){
+					$('#galeria>div').remove();
+					for(i=0; i<dados.length; i++){
+						s = montarDiv(dados[i]);
+						$('#galeria').append(s);
+					}
+				}
+
+
+				function carregarAlbuns(){
+					$.get('/albuns', 
+					function(resp){
+						//console.log(resp);
+						montarAlbuns(resp);
+					})
+				}
+
+				$(function(){
+					carregarAlbuns();
+				});
 			</script>
 	</body>
 </html>

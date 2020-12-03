@@ -105,6 +105,7 @@
 		.material-icons.md-36 { font-size: 36px; }
 		.material-icons.md-48 { font-size: 24px; }
 		.material-icons.md-60 { font-size: 60px; }
+		.material-icons.md-100 { font-size: 100px; }
 
 		@keyframes neon {
 			from {

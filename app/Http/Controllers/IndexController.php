@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Album;
 use App\Anuncio;
 use App\Banner;
 use App\Foto;
@@ -9,6 +10,7 @@ use App\Post;
 use Illuminate\Http\Request;
 use App\Produto;
 use App\Categoria;
+use App\FotosAlbum;
 
 class IndexController extends Controller
 {
@@ -16,8 +18,7 @@ class IndexController extends Controller
     {
         $banners = Banner::where('ativo',true)->orderBy('ordem')->get();
         $posts = Post::where('ativo',true)->orderBy('created_at', 'desc')->get();
-        $fotos = Foto::where('ativo',true)->orderBy('created_at', 'desc')->get();
-        return view('welcome',compact('banners','posts','fotos'));
+        return view('welcome',compact('banners','posts'));
     }
 
     public function promocoes()
@@ -80,4 +81,52 @@ class IndexController extends Controller
         $cats = Categoria::where('ativo',true)->orderBy('nome')->get();
         return view('produtos',compact('view','prods','turmas','cats'));
     }
+
+    public function album($id)
+    {
+        $album = Album::find($id);
+        $album->total_visualizacao ++;
+        $album->save();
+        return view('fotos_albuns',compact('album'));
+    }
+
+    public function albumFotos(Request $request)
+    {
+        $id = $request->input('id');
+        return FotosAlbum::where('album_id',"$id")->orderBy('created_at','desc')->get();
+    }
+
+    public function gosteiAlbum(Request $request)
+    {
+        $album = Album::find($request->input('id'));
+        $album->total_gostei ++;
+        $album->save();
+    }
+
+    public function naoGosteiAlbum(Request $request)
+    {
+        $album = Album::find($request->input('id'));
+        $album->total_naogostei ++;
+        $album->save();
+    }
+
+    public function albuns()
+    {
+        return Album::where('ativo',true)->orderBy('created_at', 'desc')->get();
+    }
+
+    public function gosteiFoto(Request $request)
+    {
+        $foto = FotosAlbum::find($request->input('id'));
+        $foto->total_gostei ++;
+        $foto->save();
+    }
+
+    public function naoGosteiFoto(Request $request)
+    {
+        $foto = FotosAlbum::find($request->input('id'));
+        $foto->total_naogostei ++;
+        $foto->save();
+    }
+
 }

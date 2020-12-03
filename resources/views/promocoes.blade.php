@@ -100,4 +100,26 @@
           @endforeach
       </div>
   </div>
+<br/>
+  <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="storage/fotos_albuns/zWQ4Qy1yrXFvkQxwBoa6WRY20NpaAdUKNUM3Nzzj.jpeg" class="img-fluid d-block w-100" alt="...">
+      </div>
+      <div class="carousel-item">
+        <img src="storage/fotos_albuns/UIs5agWmENVD1ENklILld9tXMYU7WAKlR6tugqxq.jpeg" class="img-fluid d-block w-100" alt="...">
+      </div>
+      <div class="carousel-item">
+        <img src="storage/fotos_albuns/0Z4UN5hvAJbntv1446hu9jUbvIJCEZRQamPpB9Z6.jpeg" class="img-fluid d-block w-100" alt="...">
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
 @endsection

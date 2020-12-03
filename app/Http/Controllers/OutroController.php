@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Album;
 use App\Banner;
 use App\CompraLivro;
 use App\Foto;
+use App\FotosAlbum;
 use App\Post;
 use PDF;
 use Illuminate\Http\Request;
@@ -81,9 +83,16 @@ class OutroController extends Controller
     public function apagarBanner($id)
     {
         $banner = Banner::find($id);
+        $ordem = $banner->ordem;
         if(isset($banner)){
             Storage::disk('public')->delete($banner->foto);
             $banner->delete();
+        }
+        $banners = Banner::where('ordem','>',"$ordem")->get();
+        foreach ($banners as $banner) {
+            $ban = Banner::find($banner->id);
+            $ban->ordem -= 1;
+            $ban->save();
         }
         return back();
     }
@@ -206,9 +215,146 @@ class OutroController extends Controller
         return back();
     }
 
+    //ALBUNS
+    public function indexAlbuns()
+    {
+        $albuns = Album::all();
+        foreach ($albuns as $album) {
+            $fotos = FotosAlbum::where('album_id',"$album->id")->count();
+            if($fotos>0){
+                $foto = FotosAlbum::where('album_id',"$album->id")->first();
+                $album = Album::find($album->id);
+                $album->foto_capa = $foto->foto;
+                $album->qtd_fotos = $fotos;
+                $album->save();
+            } else{
+                $album = Album::find($album->id);
+                $album->foto_capa = "";
+                $album->qtd_fotos = $fotos;
+                $album->save();
+            }
+        }
+        $albuns = Album::orderBy('created_at','desc')->get();
+        return view('outro.albuns',compact('albuns'));
+    }
+
+    public function novoAlbum(Request $request)
+    {
+        $album = new Album();
+        if($request->file('capa')!=""){
+            $path = $request->file('capa')->store('capas_albuns','public');
+            $album->foto_capa = $path;
+        }
+        if($request->input('titulo')!=""){
+            $album->titulo = $request->input('titulo');
+        }
+        if($request->input('descricao')!=""){
+            $album->descricao = $request->input('descricao');
+        }
+        $album->save();
+        return back();
+    }
+
+    public function adicionarAlbum($id)
+    {
+        $album = Album::find($id);
+        $fotos = FotosAlbum::where('album_id',"$id")->orderBy('created_at','desc')->get();
+        return view('outro.fotos_albuns',compact('album','fotos'));
+    }
+
+    public function editarAlbum(Request $request, $id)
+    {
+        $album = Album::find($id);
+        if(isset($album)){
+            if($request->file('capa')!=""){
+                Storage::disk('public')->delete($album->foto_capa);
+                $path = $request->file('capa')->store('capas_albuns','public');
+                $album->foto_capa = $path;
+            }
+            if($request->input('titulo')!=""){
+                $album->titulo = $request->input('titulo');
+            }
+            if($request->input('descricao')!=""){
+                $album->descricao = $request->input('descricao');
+            }
+            if($request->input('ativo')!=""){
+                $album->ativo = $request->input('ativo');
+            }
+            $album->save();
+        }
+        return back();
+    }
+
+    public function apagarAlbum($id)
+    {
+        $album = Album::find($id);
+        if(isset($album)){
+            $fotos = FotosAlbum::where('album_id',"$id")->get();
+            foreach ($fotos as $foto) {
+                $fotoAlbum = FotosAlbum::find($foto->id);
+                if(isset($fotoAlbum)){
+                    $fotoAlbum->delete();
+                }
+            }
+            Storage::disk('public')->delete($album->foto_capa);
+            $album->delete();
+        }
+        return back();
+    }
+
+    public function novaFotoAlbum(Request $request)
+    {
+        $foto = new FotosAlbum();
+        if($request->file('foto')!=""){
+            $path = $request->file('foto')->store('fotos_albuns','public');
+            $foto->foto = $path;
+        }
+        if($request->input('descricao')!=""){
+            $foto->descricao = $request->input('descricao');
+        }
+        $foto->album_id = $request->input('album');
+        $foto->save();
+        return back();
+    }
+
+    public function editarFotoAlbum(Request $request)
+    {
+        $foto = FotosAlbum::find($request->input('id'));
+        if(isset($foto)){
+            if($request->input('descricao')!=""){
+                $foto->descricao = $request->input('descricao');
+            }
+            $foto->save();
+        }
+        return back();
+    }
+
+    public function novasFotos(Request $request)
+    {
+        foreach ($request->allFiles()['fotos'] as $photo) {
+            $foto = new FotosAlbum();
+            $path = $photo->store('fotos','public');
+            $foto->foto = $path;
+            $foto->album_id = $request->input('album');
+            $foto->save();
+        }
+        
+        return back();
+    }
+
+    public function apagarFotoAlbum($id)
+    {
+        $foto = FotosAlbum::find($id);
+        if(isset($foto)){
+            Storage::disk('public')->delete($foto->foto);
+            $foto->delete();
+        }
+        return back();
+    }
+
     public function indexCompraLivros()
     {
-        $recibos = CompraLivro::paginate(10);
+        $recibos = CompraLivro::orderBy('created_at','desc')->paginate(10);
         $view = "inicial";
         $series = DB::table('compra_livros')->select(DB::raw("serie"))->groupBy('serie')->get();
         $turmas = DB::table('compra_livros')->select(DB::raw("turma"))->groupBy('turma')->get();

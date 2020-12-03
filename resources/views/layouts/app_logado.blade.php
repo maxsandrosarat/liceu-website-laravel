@@ -31,19 +31,34 @@
 			bottom: 40px;
 			right: 40px;
         }
+
+        .float-button-multiple{
+			position: fixed;
+            bottom: 100px;
+            right: 40px;
+        }
         .material-icons.blue { 
 			color:#0000CD;
+        }
+        
+        .material-icons.violet { 
+			color:	#9400D3;
 		}
 
 		.material-icons.white { 
 			color: white;
+        }
+        
+        .material-icons.black { 
+			color: black;
 		}
 
 		.material-icons.md-18 { font-size: 18px; }
 		.material-icons.md-24 { font-size: 24px; }
 		.material-icons.md-36 { font-size: 36px; }
 		.material-icons.md-48 { font-size: 24px; }
-		.material-icons.md-60 { font-size: 60px; }
+        .material-icons.md-60 { font-size: 60px; }
+        .material-icons.md-200 { font-size: 200px; }
         table tbody tr td{
             text-align: center;
         }
@@ -77,10 +92,12 @@
         @component('components.componente_footer_logado')
         @endcomponent
     </div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script type="text/javascript">
+
         function validarSenhaForca(){
             var senha = document.getElementById('senhaForca').value;
             var forca = 0;

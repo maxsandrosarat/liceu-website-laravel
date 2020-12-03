@@ -17,6 +17,13 @@ Route::get('/', 'IndexController@index')->name('index');
 Route::get('/promocoes', 'IndexController@promocoes')->name('promocoes');
 Route::get('/produtos', 'IndexController@produtos')->name('produtos');
 Route::get('/busca', 'IndexController@buscar');
+Route::get('/album/{id}', 'IndexController@album');
+Route::get('/album', 'IndexController@albumFotos');
+Route::post('/album/gostei', 'IndexController@gosteiAlbum');
+Route::post('/album/naoGostei', 'IndexController@naoGosteiAlbum');
+Route::get('/albuns', 'IndexController@albuns');
+Route::post('/foto/gostei', 'IndexController@gosteiFoto');
+Route::post('/foto/naoGostei', 'IndexController@naoGosteiFoto');
 
 Route::get('/sobrenos', function () {
     return view('sobrenos');
@@ -51,6 +58,17 @@ Route::group(['prefix' => 'admin'], function() {
     Route::post('/foto', 'AdminController@novaFoto');
     Route::post('/foto/editar/{id}', 'AdminController@editarFoto');
     Route::get('/foto/apagar/{id}', 'AdminController@apagarFoto');
+
+    Route::get('/album', 'AdminController@indexAlbuns');
+    Route::post('/album', 'AdminController@novoAlbum');
+    Route::post('/album/editar/{id}', 'AdminController@editarAlbum');
+    Route::get('/album/apagar/{id}', 'AdminController@apagarAlbum');
+    Route::get('/album/adicionar/{id}', 'AdminController@adicionarAlbum');
+    Route::post('/album/foto', 'AdminController@novaFotoAlbum');
+    Route::post('/album/foto/multiple', 'AdminController@novasFotos');
+    Route::post('/album/foto/editar', 'AdminController@editarFotoAlbum');
+    Route::get('/album/foto/apagar/{id}', 'AdminController@apagarFotoAlbum');
+
 
     Route::group(['prefix' => 'colaborador'], function() {
         Route::get('/', 'AdminController@indexOutros');
@@ -177,6 +195,16 @@ Route::group(['prefix' => 'outro'], function() {
     Route::post('/foto', 'OutroController@novaFoto');
     Route::post('/foto/editar/{id}', 'OutroController@editarFoto');
     Route::get('/foto/apagar/{id}', 'OutroController@apagarFoto');
+
+    Route::get('/album', 'OutroController@indexAlbuns');
+    Route::post('/album', 'OutroController@novoAlbum');
+    Route::post('/album/editar/{id}', 'OutroController@editarAlbum');
+    Route::get('/album/apagar/{id}', 'OutroController@apagarAlbum');
+    Route::get('/album/adicionar/{id}', 'OutroController@adicionarAlbum');
+    Route::post('/album/foto', 'OutroController@novaFotoAlbum');
+    Route::post('/album/foto/multiple', 'OutroController@novasFotos');
+    Route::post('/album/foto/editar', 'OutroController@editarFotoAlbum');
+    Route::get('/album/foto/apagar/{id}', 'OutroController@apagarFotoAlbum');
 
     Route::group(['prefix' => 'compraLivro'], function() {
         Route::get('/', 'OutroController@indexCompraLivros');

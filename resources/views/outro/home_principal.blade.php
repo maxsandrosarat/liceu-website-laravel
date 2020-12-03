@@ -38,6 +38,17 @@
                     </div>
                 </div>
             </div>
+            <div class="d-flex justify-content-center centralizado">
+                <div class="card border-primary text-center" style="width: 300px;">
+                    <div class="card-body">
+                        <h5>Álbuns</h5>
+                        <p class="card-text">
+                            Gerenciar Álbuns
+                        </p>
+                        <a href="/outro/album" class="btn btn-primary">Gerenciar</a>
+                    </div>
+                </div>
+            </div>
         </div>
         </div>
     </div>

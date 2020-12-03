@@ -14,7 +14,7 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <script src="https://kit.fontawesome.com/019f61e4ad.js" crossorigin="anonymous"></script>
+		<script src="https://kit.fontawesome.com/019f61e4ad.js" crossorigin="anonymous"></script>
 	</head>
 	<body>
         <div class="subpage">
@@ -43,18 +43,18 @@
             <script src="{{ asset('js/skel.min.js') }}"></script>
             <script src="{{ asset('js/util.js') }}"></script>
             <script src="{{ asset('js/main.js') }}"></script>
-            <script type="text/javascript">
-                $(document).ready(function(){
-                    //OPÇÕES DE LOGIN
-                    $('#principal').children('div').hide();
-                    $('#tipoLogin').on('change', function(){
-                        
-                        var selectValor = '#'+$(this).val();
-                        $('#principal').children('div').hide();
-                        $('#principal').children(selectValor).show();
-            
-                    });
-                });
+			<script type="text/javascript">
+				$(document).ready(function(){
+					//OPÇÕES DE LOGIN
+					$('#principal').children('div').hide();
+					$('#tipoLogin').on('change', function(){
+						
+						var selectValor = '#'+$(this).val();
+						$('#principal').children('div').hide();
+						$('#principal').children(selectValor).show();
+		
+					});
+				});
 
                 function validarSenhaForca(){
 					var senha = document.getElementById('senhaForca').value;
