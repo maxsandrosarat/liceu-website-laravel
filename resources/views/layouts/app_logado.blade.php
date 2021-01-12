@@ -166,6 +166,20 @@
             var valor = id(campo).value.replace(',','.');
             id(campo).value = parseFloat(valor);
         }
+
+        $(document).ready(function(){
+            //OPÇÕES DE LOGIN
+            $('#principal').children('div').hide();
+            $('#tipoPagamento').on('change', function(){
+                
+                var selectValor = '#'+$(this).val();
+                $('#principal').children('div').hide();
+                $('#principal').children(selectValor).show();
+                if($(this).val() == 'definido'){
+                    id('formaPagamentoMan').removeAttribute("required");
+                }
+            });
+        });
     </script>
 </body>
 </html>

@@ -54,17 +54,39 @@
                                         <input type="text" class="form-control" name="cpf" id="cpf" placeholder="CPF do Responsável" required>
                                         <label for="valor">Valor: R$
                                         <input type="text" class="form-control" name="valor" id="valor" onblur="getValor('valor');" required></label>
-                                        <select class="custom-select" id="formaPagamento" name="formaPagamento" required>
-                                            <option value="">Selecione a forma de pagamento</option>
-                                            <option value="Dinheiro">Dinheiro</option>
-                                            <option value="Cartão Débito">Cartão Débito</option>
-                                            <option value="Cartão Crédito (à Vista)">Cartão Crédito (à Vista)</option>
-                                            <option value="Cartão Crédito (2x)">Cartão Crédito (2x)</option>
-                                            <option value="Cartão Crédito (3x)">Cartão Crédito (3x)</option>
-                                            <option value="Cartão Crédito (4x)">Cartão Crédito (4x)</option>
-                                            <option value="Cartão Crédito (5x)">Cartão Crédito (5x)</option>
-                                            <option value="Cartão Crédito (6x)">Cartão Crédito (6x)</option>
+                                        
+                                        <select class="custom-select" name="tipoPagamento" id="tipoPagamento" required>
+                                            <option value="">Selecione a Forma de Pagamento</option>
+                                            <option value="definido">PRÉ-DEFINIDO</option>
+                                            <option value="manual">MANUAL</option>
                                         </select>
+                            
+                                        <div id="principal">
+                            
+                                                <div class="card" id="definido">
+                                                    <div class="card-header">FORMA DE PAGAMENTO PRÉ-DEFINIDO</div>
+                                                    <div class="card-body">
+                                                        <select class="custom-select" id="formaPagamentoDef" name="formaPagamentoDef" required>
+                                                            <option value="">Selecione a forma de pagamento</option>
+                                                            <option value="Dinheiro">Dinheiro</option>
+                                                            <option value="Cartão Débito">Cartão Débito</option>
+                                                            <option value="Cartão Crédito (à Vista)">Cartão Crédito (à Vista)</option>
+                                                            <option value="Cartão Crédito (2x)">Cartão Crédito (2x)</option>
+                                                            <option value="Cartão Crédito (3x)">Cartão Crédito (3x)</option>
+                                                            <option value="Cartão Crédito (4x)">Cartão Crédito (4x)</option>
+                                                            <option value="Cartão Crédito (5x)">Cartão Crédito (5x)</option>
+                                                            <option value="Cartão Crédito (6x)">Cartão Crédito (6x)</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                            
+                                                <div class="card" id="manual">
+                                                    <div class="card-header">FORMA DE PAGAMENTO MANUAL (DIGITADO)</div>
+                                                    <div class="card-body">
+                                                        <input type="text" class="form-control" name="formaPagamentoMan" id="formaPagamentoMan" placeholder="Digite a forma de Pagamento" required>
+                                                    </div>
+                                                </div>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-primary btn-sn">Salvar</button>
